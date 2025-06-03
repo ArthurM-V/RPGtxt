@@ -13,7 +13,7 @@ class Habilidade:
 
         atacante.ep -= self.custo
 
-        atributo = max(atacante.atk, atacante.int)
+        atributo = max(atacante.atk, atacante.inte)
         dano = self.efeito + int(atributo * 3)
         dano_final = max(0, dano - alvo.dfs)
 

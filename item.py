@@ -6,12 +6,10 @@ class Item:
         self.efeito = efeito
         self.usos = usos
         self.tipo = tipo
-
-    def ativar(self):
-        if self.usos > 0:
-            self.usos -= 1
-            return self.efeito
-        return 0
+    
+    def item_info(self):
+        mensagem = f"{self.nome} | Efeito: {self.tipo} + {self.efeito} | Usos: {self.usos}"
+        return mensagem
 
     def usar(self):
         if self.usos > 0:

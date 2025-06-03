@@ -262,12 +262,12 @@ tesouro_salas = {
         "tipo": "ep"
     },
     "pedra de defesa": {
-        "efeito": 3,
+        "efeito": 1,
         "usos": 2,
         "tipo": "dfs"
     },
     "amuletinho rachado": {
-        "efeito": 3,
+        "efeito": 1,
         "usos": 1,
         "tipo": "atk"
     },
@@ -277,40 +277,36 @@ tesouro_salas = {
         "tipo": "cura" 
     },
     "fruta amarga": {
-        "efeito": 3,
+        "efeito": 1,
         "usos": 1,
-        "tipo": "int"
+        "tipo": "inte"
     }
 }
 
 tesouro_inimigos = {
     "poção de ossos rígidos": {
-        "efeito": 5,
+        "efeito": 2,
         "usos": 1,
         "tipo": "dfs"  
     },
-    "elixir da agilidade sombria": {
-        "efeito": 20,
+
+    "elixir de essência etérea": {
+        "efeito": 2,
         "usos": 1,
-        "tipo": "esquiva"  
-    },
-    "essência etérea": {
-        "efeito": 1,
-        "usos": 1,
-        "tipo": "intangível"  
+        "tipo": "inte"  
     },
     "poção da força implacável": {
-        "efeito": 7,
+        "efeito": 2,
         "usos": 1,
         "tipo": "atk"  
     },
     "elixir vital supremo": {
-        "efeito": "total",
+        "efeito": 15,
         "usos": 1,
-        "tipo": "cura"  
+        "tipo": "hp"  
     },
     "poção arcana suprema": {
-        "efeito": "total",
+        "efeito": 15,
         "usos": 1,
         "tipo": "ep"  
     }
@@ -319,9 +315,9 @@ tesouro_inimigos = {
 #dados de classes do usuário
 classes = {
 
-    "Guerreiro" : {"hp" : 35, "ep" : 12, "atk" : 2, "dfs" : 2, "int" : 0},
-    "Mago" : {"hp" : 22, "ep" : 20, "atk" : 0, "dfs" : 1, "int" : 3},
-    "Arqueiro" : {"hp" : 28, "ep" : 15, "atk" : 3, "dfs" : 0, "int" : 1}
+    "Guerreiro" : {"hp" : 55, "ep" : 12, "atk" : 2, "dfs" : 2, "inte" : 0},
+    "Mago" : {"hp" : 40, "ep" : 20, "atk" : 0, "dfs" : 1, "inte" : 3},
+    "Arqueiro" : {"hp" : 50, "ep" : 15, "atk" : 3, "dfs" : 0, "inte" : 1}
 
 }
 
@@ -348,32 +344,11 @@ armas_iniciais = {
         "nome": "Cajado de Carvalho",
         "efeito": 2,
         "usos": -1,
-        "tipo": "int"
+        "tipo": "inte"
     },
     "Arqueiro": {
         "nome": "Arco Simples",
         "efeito": 2,
-        "usos": -1,
-        "tipo": "atk"
-    }
-}
-
-armas_dungeon = {
-    "Guerreiro": {
-        "nome": "Espada Rúnica Flamejante",
-        "efeito": 4,
-        "usos": -1,
-        "tipo": "atk"
-    },
-    "Mago": {
-        "nome": "Cajado de Cristal Arcano",
-        "efeito": 5,
-        "usos": -1,
-        "tipo": "int"
-    },
-    "Arqueiro": {
-        "nome": "Arco Longo das Sombras",
-        "efeito": 4,
         "usos": -1,
         "tipo": "atk"
     }
@@ -403,17 +378,17 @@ habilidades = {
         {
             "num" : 1,
             "nome": "Bola de Fogo",
-            "descricao": "Lança uma esfera flamejante que explode em área.",
-            "tipo": "int",
-            "efeito": 6,
+            "descricao": "Lança uma esfera flamejante que explode em contato com inimigos.",
+            "tipo": "inte",
+            "efeito": 5,
             "custo": 5
         },
         {
             "num" : 2,
-            "nome": "Barreira Mágica",
-            "descricao": "Cria um escudo arcano que reduz o dano recebido.",
-            "tipo": "dfs",
-            "efeito": 3,
+            "nome": "Míssil arcano",
+            "descricao": "Lança um projeto feito de energia pura.",
+            "tipo": "inte",
+            "efeito": 2,
             "custo": 3
         }
     ],
@@ -423,16 +398,16 @@ habilidades = {
             "nome": "Flecha Perfurante",
             "descricao": "Dispara uma flecha precisa que ignora parte da defesa inimiga.",
             "tipo": "atk",
-            "efeito": 4,
+            "efeito": 2,
             "custo": 2
         },
         {
             "num" : 2,
             "nome": "Retirada Rápida",
-            "descricao": "Recuo tático que aumenta chance de esquiva no próximo turno.",
-            "tipo": "int",
-            "efeito": 3,
-            "custo": 2
+            "descricao": "Atira 3 flechas rapidamente.",
+            "tipo": "inte",
+            "efeito": 5,
+            "custo": 4
         }
     ]
 }
@@ -441,9 +416,9 @@ inimigos_base = {
     "esqueleto": {
         "hp": 50,
         "ep" : 0,
-        "atk": 5,
-        "dfs": 5,
-        "int" : 2,
+        "atk": 2,
+        "dfs": 1,
+        "inte" : 2,
         "descrição": 
             "Ossos flutuam em um líquido que dá forma humanoide incompleta, com partes faltando, movendo-se de forma estranha."
         
@@ -451,9 +426,9 @@ inimigos_base = {
     "duende": {
         "hp": 35,
         "ep" : 0,
-        "atk": 7,
-        "dfs": 3,
-        "int" : 5,
+        "atk": 3,
+        "dfs": 0,
+        "inte" : 4,
         "descrição": 
             "Criaturas pequenas e ágeis, com pele esverdeada e orelhas pontudas, muito habilidosas em emboscadas e travessuras."
         
@@ -461,9 +436,9 @@ inimigos_base = {
     "espectro": {
         "hp": 40,
         "ep" : 14,
-        "atk": 8,
-        "dfs": 4,
-        "int" : 7,
+        "atk": 4,
+        "dfs": 1,
+        "inte" : 5,
         "descrição": 
             "Espírito disforme, vagamente humanoide, parecendo ter apenas uma perna, que se move silenciosamente pela masmorra."
         
@@ -471,40 +446,12 @@ inimigos_base = {
     "armadura viva": {
     "hp": 60,
     "ep" : 14,
-    "atk": 10,
-    "dfs": 8,
-    "int" : 0,
-    "descrição": 
-        "Peças de armadura que se movem sozinhas, unidas por uma força invisível e maligna."
-    
-}
-}
-inimigos_tipos = {
-        
-    "esqueleto": {
-        "fogo": "Líquido flamejante que envolve os ossos, formando uma armadura viva de fogo.",
-        "gelo": "Armadura de gelo cristalino envolvendo os ossos, sugando o calor do ambiente.",
-        "agua": "Ossos submersos em líquido turvo, com aparência fantasmagórica e aquática."
-    },
-    "duende": {
-        "fogo": "Duende cujos olhos brilham como brasas e sua pele parece irradiar calor incandescente.",
-        "gelo": "Duende com pele azulada e respiração visível, que deixa rastros de gelo por onde passa.",
-        "agua": "Duende ágil que parece se mover com a fluidez da água, deixando um rastro molhado e fresco."
-    },
-    "espectro": {
-        "fogo": "Parece uma bola de fogo viva, sua forma disforme incandescente dança como chamas selvagens.",
-        "gelo": "Uma nuvem viva composta por partículas de gelo e flocos de neve que flutuam em seu redor.",
-        "agua": "Sua forma aquosa brilha em certos pontos, como se fosse feita de água viva cintilante."
-    },
-    "armadura viva": {
-        "fogo": "A armadura brilha com calor, suas placas incandescentes exalam fumaça.",
-        "gelo": "Revestida por geada, a armadura range ao se mover, coberta por cristais de gelo.",
-        "agua": "A armadura pinga constantemente, suas juntas encharcadas ecoam sons metálicos úmidos."
+    "atk": 5,
+    "dfs": 4,
+    "inte" : 0,
+    "descrição": "Peças de armadura que se movem sozinhas, unidas por uma força invisível e maligna."
     }
 }
-
-item_equipado = []
-arma_equipada = []
 
 #Guarda os usuários
 users = {

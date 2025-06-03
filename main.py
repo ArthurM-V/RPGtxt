@@ -83,43 +83,45 @@ def gera_sala(x, tipo=None):
     if tipo is None:
         chave_tipo = random.choice(list(dndata.tipo_salas.keys()))
         tipo = random.choice(dndata.tipo_salas[chave_tipo])
-    
-    chave_tesouro = random.choice(list(dndata.tesouro_salas.keys()))
+
     aparencia = random.choice(list(dndata.aparencia_sala[x.tipo]))
-    tesouro = dndata.tesouro_salas[chave_tesouro]
+    tesouro_escolhido = random.choice(list(dndata.tesouro_salas.items()))
+    tesouro_nome, tesouro_info = tesouro_escolhido
+    tesouro = it.Item(tesouro_nome, tesouro_info["efeito"], tesouro_info["usos"], tesouro_info["tipo"])
 
     return sl.Sala(tipo, aparencia, tesouro)
 
 #Gera os inimigos automaticamente
-def gera_inimigo(nome, masmorra):
-    nome = nome or random.choice(list(dndata.inimigos_base.keys()))
+def gera_inimigo(nome):
+    nome = nome
     
     hp = dndata.inimigos_base[nome]["hp"]
     ep = dndata.inimigos_base[nome]["ep"]
     atk = dndata.inimigos_base[nome]["atk"]
     dfs = dndata.inimigos_base[nome]["dfs"]
-    int = dndata.inimigos_base[nome]["int"]
+    inte = dndata.inimigos_base[nome]["inte"]
     
-    arma = random.choice(list(dndata.tesouro_salas.keys()))
+
     loot = random.choice(list(dndata.tesouro_inimigos.keys()))
 
     descricao_base = dndata.inimigos_base[nome]["descrição"]
-    descricao_perigo = masmorra.elemento
-    desc = f"{descricao_base} {descricao_perigo}"
+    
+    desc = f"{descricao_base}"
 
-    return inm.Inimigo(nome, hp, ep, atk, dfs, int, item, loot, desc)
+    return inm.Inimigo(nome, hp, ep, atk, dfs, inte, item, loot, desc)
 
 #Lida com o combate por turnos
 def combate(jogador, horda):
-    print("\n==========COMBATE==========\n\n")
-
     while jogador.hp > 0 and any(inimigo.hp > 0 for inimigo in horda):
+
+        print("\n==========COMBATE==========\n\n")
+
         # TURNO DO JOGADOR
         vivos = [inimigo for inimigo in horda if inimigo.hp > 0]
 
         print("\n=== Inimigos vivos ===")
         for i, inimigo in enumerate(vivos):
-            print(f"{i + 1}. {inimigo.nome} (HP: {inimigo.hp})")
+            print(f"{i + 1}. {inimigo.nome} (HP: {inimigo.hp}) | {inimigo.descricao}\n")
 
         # Escolher alvo
         while True:
@@ -136,12 +138,13 @@ def combate(jogador, horda):
         # Verifica se todos os inimigos foram derrotados
         if all(inimigo.hp <= 0 for inimigo in horda):
             print("\n\t=====Todos os inimigos foram derrotados!=====\n")
+            input("Pressione Enter para continuar!")
             break
 
         # TURNO DOS INIMIGOS
         for inimigo in horda:
             if inimigo.hp > 0:
-                inimigo.larga_loot()
+
                 inm.turno_inimigo(inimigo, jogador)
                 input("Pressione Enter para continuar!")
                 if jogador.hp <= 0:
@@ -251,7 +254,7 @@ while not personagem_criado:
             mana = atributos["ep"]
             ataque = atributos["atk"]
             defesa = atributos["dfs"]
-            inteligencia = atributos["int"]
+            inteligencia = atributos["inte"]
 
             # Equipamento e habilidades
 
@@ -279,7 +282,7 @@ while not personagem_criado:
                 ep=mana,
                 atk=ataque,
                 dfs=defesa,
-                int=inteligencia,
+                inte=inteligencia,
                 arma=arma,
                 item=item,
                 habilidades = habilidades_classe
@@ -290,7 +293,7 @@ while not personagem_criado:
             print("====== Personagem Criado ======\n")
             print(f"Nome: {jogador.nome}")
             print(f"Classe: {jogador.classe}")
-            print(f"Atributos: HP {jogador.hp}, EP {jogador.ep}, ATK {jogador.atk}, DFS {jogador.dfs}, INT {jogador.int}")
+            print(f"{jogador.mostra_atributos()}")
             print(f"Arma inicial: {jogador.arma.nome} (Efeito: {jogador.arma.efeito}, Tipo: {jogador.arma.tipo})")
             print(f"Item inicial: {jogador.item.nome} (Efeito: {jogador.item.efeito}, Usos: {jogador.item.usos})")
             print("Habilidades: \n")
@@ -315,28 +318,32 @@ masmorra = gera_masmorra()
 lista_salas = gera_tipos_salas(masmorra.num_salas)
 salas = [gera_sala(masmorra, tipo) for tipo in lista_salas]
 index = 0
+print("\n\n=====")
 print(masmorra.narra_masmorra())
 
-while not jogador.hp <= 0 and index < len(lista_salas):
+sala_final = None
+for sala in salas:
+    if sala.tipo == "chefe":
+        sala_final = sala
+        salas.remove(sala)
+        break
 
-    sala_final = None
-    for sala in salas:
-        if sala.tipo == "chefe":
-            sala_final = sala
-            salas.remove(sala)
-            break
-    
-    for i, sala in enumerate(salas):
-        print("\n----------")
-        print(f"\nMasmorra {masmorra.nome}\nSala: {i+1}\n{jogador.nome}\n\n")
-        print("----------")
+for i, sala in enumerate(salas):
+    index += 1
+    print("\n----------")
+    print(f"\nMasmorra {masmorra.nome}\nSala: {i+1}\nExplorador: {jogador.nome}\n\n")
+    print("----------")
 
-        print(sala.narra_sala(sala.tipo))
-        input("Pressione Enter para explorar a sala!")
+    print(sala.narra_sala(sala.tipo))
+    print("Você adentra a sala misteriosa. O que deseja fazer?\n1.Investigar a sala.\n2.Gerenciar o equipamento.\n3.Seguir em frente.\n")
+    opcao = input(">>")
 
+    chance = sala.tem_loot()
+
+    if opcao == "1" or opcao == "3":
         if sala.tem_inimigos():
                 print("----------\n")
-                print(f"Ao investigar mais a masmorra você percebe uma movimentação estranha, como se o ambiente estivesse escurecendo, a luz das tochas se tornam mais fraca e o ar mais denso, sombras dançam pela sala. De repente, vultos aparecessem e você se vê cercado por figuras monstruosas. Enquanto algumas delas te observam e se aproximam, você se prepara para o combate.")
+                print(f"Ao adentrar mais a sala você percebe uma movimentação estranha, como se o ambiente estivesse escurecendo, a luz das tochas se tornam mais fraca e o ar mais denso, sombras dançam pela sala. De repente, vultos aparecessem e você se vê cercado por figuras monstruosas. Enquanto algumas delas te observam e se aproximam, você se prepara para o combate.")
                 num_onda = sala.calcula_encontros()        # retorna quantas ondas
                 lista_nomes = sala.gera_hordas(num_onda)   # retorna nomes dos inimigos por onda
                 hordas = []  # cada horda será uma lista de Inimigos reais
@@ -346,32 +353,31 @@ while not jogador.hp <= 0 and index < len(lista_salas):
                     hordas.append(horda)
 
                 for i, horda in enumerate(hordas):
-                    print(f" Horda: {i + 1}")
+                    print(f"\n\n{i + 1}º Turno:")
                     resultado = combate(jogador, horda)
                     if not resultado:
                         jogador.hp = 0  
-                    break
-        else:
+                        break
+        elif chance:
 
-            chance = sala.tem_loot()
+            if True:
 
-            if chance:
+                    print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
+                    
+                    print(sala.revela_loot(chance))
 
-                print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
-                
-                print(sala.revela_loot(chance))
+                    jg.menu_item(jogador, sala)
 
-                
+    elif opcao == "2":
+        print("\t\t==========VISUALIZANDO EQUIPAMENTO==========\n\n")
+        print("----------")
+        print(jogador.mostra_equipamento(jogador))
+        print("----------")
 
-        if index > len(salas):
-            print("Ao passar por diversos perigos, você finalmente consegue chegar a uma saída!")
-            break
-        if jogador.hp <= 0:
-            break  
+    else:
+        print("-> Opção inválida!")
+        continue
 
-    index += 1
-
-if jogador.hp <= 0:
-    print(f"\n{jogador.nome} caiu em batalha...\nGame Over.")
-else:
-    print(f"\nParabéns, {jogador.nome}! Você sobreviveu à masmorra {masmorra.nome}.")
+    if jogador.hp <= 0:
+        print(f"\n{jogador.nome} caiu em batalha...\n\t==========Game Over.==========")
+        break

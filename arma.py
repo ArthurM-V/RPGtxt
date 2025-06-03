@@ -14,4 +14,4 @@ class Arma(Item):
         return self.habilidade_secundaria.usar_habilidade(atacante, alvo)
 
     def dados(self):
-        return f"Arma: {self.nome},\nTipo: {self.tipo},\nEfeito: {self.efeito},\nUsos restantes: {self.usos},\nHabilidade primária: {self.habilidade_primaria},\nHabilidade secundária: {self.habilidade_secundaria}"
+        return f"Arma: {self.nome} \nHabilidade primária: {self.habilidade_primaria},\nHabilidade secundária: {self.habilidade_secundaria}"

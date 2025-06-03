@@ -4,8 +4,8 @@ from personagem import Personagem
 from habilidade import Habilidade
 
 class Jogador(Personagem):
-    def __init__(self, nome, classe, hp, ep, atk, dfs, int, item, arma, habilidades):
-        super().__init__(nome, classe, hp, ep, atk, dfs, int)
+    def __init__(self, nome, classe, hp, ep, atk, dfs, inte, item, arma, habilidades):
+        super().__init__(nome, classe, hp, ep, atk, dfs, inte)
         self.arma = arma
         self.item = item
         self.habilidades = habilidades
@@ -17,6 +17,9 @@ class Jogador(Personagem):
     def jogador_vivo(self, valor):
         pass
 
+    def mostra_equipamento(self, jogador):
+        return f"Classe: {self.classe}\t{jogador.mostra_atributos()}\nHP: {self.hp}\tEP: {self.ep}\nItem: {self.item.item_info()}\nArma: {self.arma.dados()}"
+
     def equipa_arma(self):
         arma = dndata.armas_iniciais[self.classe]
         self.arma = arma  
@@ -25,29 +28,31 @@ class Jogador(Personagem):
 
     def guarda_item(self, item):
 
-        if len(dndata.item_equipado) == 0:
+        if self.item is None:
             self.item = item
-            dndata.item_equipado.append(item)
+            
             return f"Item {item.nome} equipado"
         else:
-            return f"Você já tem {self.item} equipado!"
-    
+            return f"Você já tem {self.item.nome} equipado!"
+
     def usar_item(self):
         if not self.item:
             return "Nenhum item equipado."
 
         tipo = self.item.tipo
         efeito = self.item.efeito
+        hp_max = dndata.classes[self.classe]["hp"]
+        ep_max = dndata.classes[self.classe]["ep"]
 
         if tipo == "hp":
-            self.hp += efeito
+            self.hp = min(hp_max, self.hp + efeito)
             mensagem = f"{self.nome} usou {self.item.nome} e recuperou {efeito} de HP!"
         elif tipo == "ep":
-            self.ep += efeito
+            self.ep = min(ep_max, self.ep + efeito)
             mensagem = f"{self.nome} usou {self.item.nome} e recuperou {efeito} de EP!"
         elif tipo == "cura":
-            self.hp += efeito
-            self.ep += efeito
+            self.hp = min(hp_max, self.hp + efeito)
+            self.ep = min(ep_max, self.ep + efeito)
             mensagem = f"{self.nome} usou {self.item.nome} e recuperou {efeito} de HP e EP!"
         elif tipo == "atk":
             self.atk += efeito
@@ -55,8 +60,8 @@ class Jogador(Personagem):
         elif tipo == "dfs":
             self.dfs += efeito
             mensagem = f"{self.nome} usou {self.item.nome} e ganhou {efeito} de defesa!"
-        elif tipo == "int":
-            self.int += efeito
+        elif tipo == "inte":
+            self.inte += efeito
             mensagem = f"{self.nome} usou {self.item.nome} e ganhou {efeito} de inteligência!"
         else:
             mensagem = f"O item {self.item.nome} não teve efeito conhecido."
@@ -68,10 +73,9 @@ class Jogador(Personagem):
         return f"{mensagem}\n{resultado}"
 
     def largar(self):
-        if hasattr(self, 'item') and self.item in dndata.item_equipado:
-            dndata.item_equipado.remove(self.item)
+        if self.item:
             item_largado = self.item
-            del self.item  
+            self.item = None
             return f"Item {item_largado.nome} largado."
         else:
             return "Nenhum item equipado para largar."
@@ -87,23 +91,45 @@ class Jogador(Personagem):
 
         if self.arma.tipo == "atk":
             dano = self.atk * self.arma.efeito + dado
-        elif self.arma.tipo == "int":
-            dano = self.int * self.arma.efeito + dado
+        elif self.arma.tipo == "inte":
+            dano = self.inte * self.arma.efeito + dado
         
         return dano
 
 def menu_item(jogador, sala):
 
-    print(f"---------------\n\n{jogador.nome} | HP: {jogador.hp} EP: {jogador.ep}\n")
-    print(f"{sala.tesouro} | Efeito: {sala.tesouro.tipo} + {sala.tesouro.efeito}\n---------------")
-    if len(dndata.item_equipado) == 1:
-        escolha = input(f"\n===Você já tem um item equipado!===\n\nVocê pode escolher entre:\n1.Consumir o seu item equipado | {jogador.item}: {jogador.item.tipo} + {jogador.item.efeito}\t2.Trocar o item equipado pelo encontrado!")
+    print(f"---------------\n\n{jogador.nome} | HP: {jogador.hp} EP: {jogador.ep}\nItem equipado atual: {jogador.item.nome}: {jogador.item.tipo} + {jogador.item.efeito}")
+    print(f"{sala.tesouro.nome} | Efeito: {sala.tesouro.tipo} + {sala.tesouro.efeito}\n---------------")
+    index = False
+    while index == False:
+        if jogador.item is not None:
+            escolha = input(f"\n===Você já tem um item equipado!===\n\nVocê pode escolher entre:\n1.Consumir o seu item equipado e trocar pelo encontrado. \t2.Ignorar o item encontrado.\n>>")
 
-        if escolha == "1":
-            jogador.item.usar_item()
-        elif escolha == "2":
-            jogador.largar()
-            jogador.guarda_item(sala.tesouro)
+            if escolha == "1":
+                print(f"Você usou {jogador.item.nome} e equipou {sala.tesouro.nome}")
+                print(jogador.usar_item())
+                jogador.guarda_item(sala.tesouro)
+                break
+            elif escolha == "2":
+                print(f"Você trocou {jogador.item.nome} por {sala.tesouro.nome}")
+                jogador.largar()
+                jogador.guarda_item(sala.tesouro)
+                break
+            else:
+                print("Escolha inválida")
+                continue        
+        else:
+            escolhe = input("1.Equipar item encontrado \t2.Ignorar item\n>>")
+            if escolhe == "1":
+                jogador.guarda_item(sala.tesouro)
+                print(f"Você equipou {sala.tesouro.nome}")
+                break
+            elif escolhe == "2":
+                print(f"Você ignora {sala.tesouro.nome} e continua sua exploração.")
+                break
+            else:
+                print("Opção inválida!")
+                continue
 
 def turno_jogador(jogador, inimigo):
 

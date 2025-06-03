@@ -46,7 +46,8 @@ class Sala:
     def revela_loot(self, chance):
 
         if chance:
-            return f"\n\t========== Você encontrou {self.tesouro}!==========\n"
+            return f"\n\t========== Você encontrou {self.tesouro.nome}!==========\n"
         else:
             return f"Ao investigar a sala, você não encontrou nada!"
-            
+
+
