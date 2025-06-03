@@ -262,12 +262,12 @@ tesouro_salas = {
         "tipo": "ep"
     },
     "pedra de defesa": {
-        "efeito": 6,
+        "efeito": 3,
         "usos": 2,
         "tipo": "dfs"
     },
     "amuletinho rachado": {
-        "efeito": 6,
+        "efeito": 3,
         "usos": 1,
         "tipo": "atk"
     },
@@ -277,9 +277,9 @@ tesouro_salas = {
         "tipo": "cura" 
     },
     "fruta amarga": {
-        "efeito": 10,
+        "efeito": 3,
         "usos": 1,
-        "tipo": "esquiva"
+        "tipo": "int"
     }
 }
 
@@ -470,6 +470,7 @@ inimigos_base = {
     },
     "armadura viva": {
     "hp": 60,
+    "ep" : 14,
     "atk": 10,
     "dfs": 8,
     "int" : 0,

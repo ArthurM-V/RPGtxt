@@ -8,13 +8,13 @@ class Habilidade:
         self.efeito = efeito
          
     def usar_habilidade(self, atacante, alvo):
-        if atacante.ep < self.custo_ep:
+        if atacante.ep < self.custo:
             return f"{atacante.nome} não tem EP suficiente para usar {self.nome}."
 
-        atacante.ep -= self.custo_ep
+        atacante.ep -= self.custo
 
         atributo = max(atacante.atk, atacante.int)
-        dano = self.poder + int(atributo * self.escala)
+        dano = self.efeito + int(atributo * 3)
         dano_final = max(0, dano - alvo.dfs)
 
         alvo.hp -= dano_final

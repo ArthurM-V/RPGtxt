@@ -1,8 +1,8 @@
 from item import Item
 
 class Arma(Item):
-    def __init__(self, efeito, usos, tipo, habilidade_primaria, habilidade_secundaria, nome):
-        super().__init__(efeito, usos, tipo)
+    def __init__(self, nome, efeito, usos, tipo, habilidade_primaria, habilidade_secundaria,):
+        super().__init__(nome, efeito, usos, tipo)
         self.habilidade_primaria = habilidade_primaria
         self.habilidade_secundaria = habilidade_secundaria
         self.nome = nome

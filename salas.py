@@ -8,11 +8,11 @@ class Sala:
         self.tesouro = tesouro
 
     def narra_sala(self, tipo):
-        return f"Ao adentrar a masmorra, atravessando corredores ameaçadores, você finalmente encontra uma porta. Ao se aproximar, nota que é possível enxergar algo além dela, uma sala silenciosa, envolta em mistério, esperando para ser revelada. {random.choice(list(dndata.tipo_salas[tipo]))}, com {self.aparencia}."
+        return f"Ao atravessar a porta, nota que é possível enxergar algo além dela, uma sala silenciosa, envolta em mistério, esperando para ser revelada. {random.choice(list(dndata.tipo_salas[tipo]))}, com {self.aparencia}."
 
     def tem_inimigos(self):
         chance = random.randint(1, 20)
-        if chance % 5 == 0:
+        if chance % 2 == 0:
             return True
         else:
             return False
@@ -22,15 +22,31 @@ class Sala:
         num_horda = random.randint(1, 3)
         
         return num_horda
+    
+    def gera_hordas(self, num_horda):
+        lista_horda = []
+        for i in range(num_horda):
+            grupos = [] 
+            mon_num = random.randint(1, 3)
+            for j in range(mon_num):
+                monstro = random.choice(list(dndata.inimigos_base))
+                grupos.append(monstro)
+            lista_horda.append(grupos)
+        return lista_horda
 
-    def revelaLoot(self, chance, jogador):
+    def tem_loot(self):
+        
+        chance = random.randint(1, 6)
 
-        loot_chance = chance + jogador.int
+        if chance % 2 == 0:
+            return True
+        else:
+            return False
+        
+    def revela_loot(self, chance):
 
-        if(loot_chance % 2 == 0):
-            loot_encontrado = random.choice(list(dndata.tesouro_salas.keys()))
-            return f"Ao investigar a sala, você achou {loot_encontrado}!"
+        if chance:
+            return f"\n\t========== Você encontrou {self.tesouro}!==========\n"
         else:
             return f"Ao investigar a sala, você não encontrou nada!"
-    
-
+            

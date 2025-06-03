@@ -23,5 +23,6 @@ class Item:
         else:
             return f"O item {self.nome} já foi totalmente consumido e não pode ser usado."
         
-    def largar(self):
+    def largar(self, jogador):
+        jogador.item = None
         return f"Você descartou {self.nome}!"

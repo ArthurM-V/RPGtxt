@@ -1,16 +1,21 @@
 import dungeon_dict as dndata
+import random
 from personagem import Personagem
 from habilidade import Habilidade
 
 class Jogador(Personagem):
     def __init__(self, nome, classe, hp, ep, atk, dfs, int, item, arma, habilidades):
-        super().__init__(nome, classe, hp, ep, atk, dfs, int, arma)
+        super().__init__(nome, classe, hp, ep, atk, dfs, int)
+        self.arma = arma
         self.item = item
         self.habilidades = habilidades
 
     @property
     def jogador_vivo(self):
         return self.hp > 0
+    @jogador_vivo.setter
+    def jogador_vivo(self, valor):
+        pass
 
     def equipa_arma(self):
         arma = dndata.armas_iniciais[self.classe]
@@ -19,9 +24,13 @@ class Jogador(Personagem):
         return f"{self.nome} equipou a arma: {arma['nome']}"
 
     def guarda_item(self, item):
-        self.item = item
-        dndata.item_equipado.append(item)
-        return f"Item {item.nome} equipado"
+
+        if len(dndata.item_equipado) == 0:
+            self.item = item
+            dndata.item_equipado.append(item)
+            return f"Item {item.nome} equipado"
+        else:
+            return f"Você já tem {self.item} equipado!"
     
     def usar_item(self):
         if not self.item:
@@ -36,6 +45,19 @@ class Jogador(Personagem):
         elif tipo == "ep":
             self.ep += efeito
             mensagem = f"{self.nome} usou {self.item.nome} e recuperou {efeito} de EP!"
+        elif tipo == "cura":
+            self.hp += efeito
+            self.ep += efeito
+            mensagem = f"{self.nome} usou {self.item.nome} e recuperou {efeito} de HP e EP!"
+        elif tipo == "atk":
+            self.atk += efeito
+            mensagem = f"{self.nome} usou {self.item.nome} e ganhou {efeito} de ataque!"
+        elif tipo == "dfs":
+            self.dfs += efeito
+            mensagem = f"{self.nome} usou {self.item.nome} e ganhou {efeito} de defesa!"
+        elif tipo == "int":
+            self.int += efeito
+            mensagem = f"{self.nome} usou {self.item.nome} e ganhou {efeito} de inteligência!"
         else:
             mensagem = f"O item {self.item.nome} não teve efeito conhecido."
 
@@ -59,6 +81,30 @@ class Jogador(Personagem):
             print(f"{i+1}. {habilidade.nome}, {habilidade.descricao}")
         return
 
+    def calcula_dano(self):
+
+        dado = random.randint(1, 6)
+
+        if self.arma.tipo == "atk":
+            dano = self.atk * self.arma.efeito + dado
+        elif self.arma.tipo == "int":
+            dano = self.int * self.arma.efeito + dado
+        
+        return dano
+
+def menu_item(jogador, sala):
+
+    print(f"---------------\n\n{jogador.nome} | HP: {jogador.hp} EP: {jogador.ep}\n")
+    print(f"{sala.tesouro} | Efeito: {sala.tesouro.tipo} + {sala.tesouro.efeito}\n---------------")
+    if len(dndata.item_equipado) == 1:
+        escolha = input(f"\n===Você já tem um item equipado!===\n\nVocê pode escolher entre:\n1.Consumir o seu item equipado | {jogador.item}: {jogador.item.tipo} + {jogador.item.efeito}\t2.Trocar o item equipado pelo encontrado!")
+
+        if escolha == "1":
+            jogador.item.usar_item()
+        elif escolha == "2":
+            jogador.largar()
+            jogador.guarda_item(sala.tesouro)
+
 def turno_jogador(jogador, inimigo):
 
     while True:
@@ -67,7 +113,7 @@ def turno_jogador(jogador, inimigo):
         print(f"Hp: {jogador.hp}\nEp: {jogador.ep}\n----------")
         print("Decida a sua ação no turno!")
         print("1.Ataque Básico! \t2.Defender \t3.Esquivar")
-        print(f"4.{jogador.arma.habilidade_primaria.nome} | custo: {jogador.arma.habilidade_primaria.custo_ep} \t 5.{jogador.arma.habilidade_secundaria.nome} | custo: {jogador.arma.habilidade_secundaria.custo_ep}")
+        print(f"4.{jogador.arma.habilidade_primaria.nome} | custo: {jogador.arma.habilidade_primaria.custo} \t 5.{jogador.arma.habilidade_secundaria.nome} | custo: {jogador.arma.habilidade_secundaria.custo}")
         escolha = input("Escolha sua ação:\n>> ")
 
         if escolha == "1":
@@ -77,21 +123,21 @@ def turno_jogador(jogador, inimigo):
             break
 
         elif escolha == "2":
-            print(jogador.arma.usar_primaria(jogador, inimigo))
-            break
-
-        elif escolha == "3":
-            print(jogador.arma.usar_secundaria(jogador, inimigo))
-            break
-
-        elif escolha == "4":
             jogador.defendendo = True  # um flag para ser usado quando receber ataque
             print("Você se preparou para defender o próximo ataque.")
             break
 
-        elif escolha == "5":
+        elif escolha == "3":
             jogador.tentando_esquivar = True  # outro flag
             print("Você se posicionou para tentar esquivar do próximo ataque.")
+            break
+
+        elif escolha == "4":
+            print(jogador.arma.usar_primaria(jogador, inimigo))
+            break
+
+        elif escolha == "5":
+            print(jogador.arma.usar_secundaria(jogador, inimigo))
             break
 
         else:

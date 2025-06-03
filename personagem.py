@@ -1,7 +1,7 @@
 import random
 
 class Personagem:
-    def __init__(self, nome, classe, hp, ep, atk, dfs, int, arma):
+    def __init__(self, nome, classe, hp, ep, atk, dfs, int):
         self.nome = nome
         self.classe = classe
         self.hp = hp
@@ -9,13 +9,12 @@ class Personagem:
         self.atk = atk
         self.dfs = dfs
         self.int = int
-        self.arma = arma
 
     def mostra_atributos(self):
         return f"Atributos - ATK: {self.atk}, DFS: {self.dfs}, INT: {self.int}"
     
     def calcula_dano(self):
-        return self.atk + self.arma.get("efeito", 0)
+        return self.atk + 2
     
     def ataca(self, alvo):
         dano = self.calcula_dano()
