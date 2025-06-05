@@ -115,7 +115,7 @@ def menu_item(jogador, sala):
         print(f"Item equipado atual: {jogador.item.nome}: {jogador.item.tipo} + {jogador.item.efeito}")
     else:
         print("Item equipado atual: Nenhum")
-    print(f"{sala.tesouro.nome} | Efeito: {sala.tesouro.tipo} + {sala.tesouro.efeito}\n---------------")
+    print(f"Item encontrado:{sala.tesouro.nome} | Efeito: {sala.tesouro.tipo} + {sala.tesouro.efeito}\n---------------")
     index = False
     while index == False:
         if jogador.item is not None:
@@ -127,9 +127,7 @@ def menu_item(jogador, sala):
                 jogador.guarda_item(sala.tesouro)
                 break
             elif escolha == "2":
-                print(f"Você trocou {jogador.item.nome} por {sala.tesouro.nome}")
-                jogador.largar()
-                jogador.guarda_item(sala.tesouro)
+                print(f"Você ignora {sala.tesouro.nome} e volta a sua atenção para a sala.")
                 break
             else:
                 print("Escolha inválida")
@@ -138,10 +136,10 @@ def menu_item(jogador, sala):
             escolhe = input("1.Equipar item encontrado \t2.Ignorar item\n>>")
             if escolhe == "1":
                 jogador.guarda_item(sala.tesouro)
-                input(f"Você equipou {sala.tesouro.nome}")
+                input(f"Você equipou {sala.tesouro.nome}!")
                 break
             elif escolhe == "2":
-                input(f"Você ignora {sala.tesouro.nome} e continua sua exploração.")
+                input(f"Você ignora {sala.tesouro.nome} e volta a sua atenção para a sala.")
                 break
             else:
                 print("Opção inválida!")

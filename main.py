@@ -157,6 +157,12 @@ def combate(jogador, horda):
                 if jogador.hp <= 0:
                     print(f"\n {jogador.nome} foi derrotado...")
                     return False  # derrota
+            if inimigo.hp <= 0 and inimigo.larga_loot():
+                print(f"\n\n\t========O INIMIGO {inimigo.nome} DERRUBOU {inimigo.item.nome}==========\n")
+
+                inm.menu_loot(jogador, inimigo)
+                input("Pressione Enter para continuar! ")
+
 
     return True  # vitória
 
@@ -306,7 +312,7 @@ while not personagem_criado:
             print("Habilidades: \n")
             jogador.descreve_habilidades()
 
-            input("\nPressione Enter para iniciar sua jornada...")
+            input("\nPressione Enter para iniciar sua jornada... ")
             
         else:
             print("Opção inválida! Tente novamente.")
@@ -328,101 +334,96 @@ segue = False
 index = 0
 print("\n\n=====\n")
 print(masmorra.narra_masmorra())
-
-sala_final = None
-for sala in salas:
-    if sala.tipo == "chefe":
-        sala_final = sala
-        salas.remove(sala)
-        break
+input("Pressione Enter para continuar! ")
 
 for i, sala in enumerate(salas):
     index += 1
     prox_sala = False
-    
-    print("\n----------")
-    print(f"\nMasmorra {masmorra.nome}\nSala: {i+1}\nExplorador: {jogador.nome}\n")
-    print("----------")
+
 
     print(sala.narra_sala(sala.tipo))
-    print("Você adentra a sala misteriosa. O que deseja fazer?\n1.Investigar a sala.\n2.Gerenciar o equipamento.\n3.Seguir em frente.\n")
-    opcao = input(">>")
+    input("Pressione Enter para continuar! ")
 
-    inimigos = sala.tem_inimigos()
-    chance = sala.tem_loot()
-
-    if opcao == "1" or opcao == "3":
-        if inimigos:
-                print("----------\n")
-                print(f"Ao adentrar mais a sala você percebe uma movimentação estranha, como se o ambiente estivesse escurecendo, a luz das tochas se tornam mais fraca e o ar mais denso, sombras dançam pela sala. De repente, vultos aparecessem e você se vê cercado por figuras monstruosas. Enquanto algumas delas te observam e se aproximam, você se prepara para o combate.")
-                num_onda = sala.calcula_encontros()        # retorna quantas ondas
-                lista_nomes = sala.gera_hordas(num_onda)   # retorna nomes dos inimigos por onda
-                hordas = []  # cada horda será uma lista de Inimigos reais
-
-                for nomes in lista_nomes:
-                    horda = [gera_inimigo(nome) for nome in nomes]
-                    hordas.append(horda)
-
-                for i, horda in enumerate(hordas):
-                    resultado = combate(jogador, horda)
-                    if not resultado:
-                        jogador.hp = 0  
-                        break
-                    
-        elif chance:
-                print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
-                    
-                print(sala.revela_loot(chance))
-
-                jg.menu_item(jogador, sala)
-                input("Pressione Enter para seguir para a próxima sala! ")
-
-    elif opcao == "2":
-        print("\t\t==========VISUALIZANDO EQUIPAMENTO==========\n\n")
+    while prox_sala == False:
+        print("\n----------")
+        print(f"\nMasmorra {masmorra.nome}\nSala: {i+1}\nExplorador: {jogador.nome}\n")
         print("----------")
-        print(jogador.mostra_equipamento(jogador))
-        print("----------")
-        op = input("O que você deseja fazer?\n1.Usar item equipado.\t2.Voltar a explorar a sala.\n>>")
-        if op == "1":
-            if jogador.item:
-                print(f"=====\nUsando item {jogador.item.nome}!\n=====")
-                print(jogador.usar_item())
-            else:
-                print("Você não tem nenhum item equipado!")
-                input("Pressione Enter para continuar!")
-        elif op == "2":
+        print("Você está na sala misteriosa. O que deseja fazer?\n1.Investigar a sala.\n2.Gerenciar o equipamento.\n3.Seguir em frente.\n")
+        opcao = input(">>")
+        inimigos = sala.tem_inimigos()
+        chance = sala.tem_loot()
+
+        if opcao == "1":
+            print("\nVocê dedica alguns momentos para examinar o ambiente com mais atenção. Seus sentidos ficam aguçados enquanto seus olhos percorrem cada detalhe ao redor, em busca de algo fora do comum. O silêncio parece mais denso durante a busca, como se o próprio ar segurasse a respiração, com cuidado, você toca superfícies, observa cantos e avalia possíveis esconderijos.")
             if inimigos:
-                print("----------\n")
-                print(f"Enquanto você organiza seus equipamentos, você percebe uma movimentação estranha, como se o ambiente estivesse escurecendo, a luz das tochas se tornam mais fraca e o ar mais denso, sombras dançam pela sala. De repente, vultos aparecessem e você se vê cercado por figuras monstruosas. Enquanto algumas delas te observam e se aproximam, você se prepara para o combate.")
-                num_onda = sala.calcula_encontros()        # retorna quantas ondas
-                lista_nomes = sala.gera_hordas(num_onda)   # retorna nomes dos inimigos por onda
-                hordas = []  # cada horda será uma lista de Inimigos reais
+                 print("----------\n")
+                 print(f"Ao investigar a sala você percebe uma movimentação estranha, como se o ambiente estivesse escurecendo, a luz das tochas se tornam mais fraca e o ar mais denso, sombras dançam pela sala. De repente, vultos aparecessem e você se vê cercado por figuras monstruosas. Enquanto algumas delas te observam e se aproximam, você se prepara para o combate.")
+                 num_onda = sala.calcula_encontros()        # retorna quantas ondas
+                 lista_nomes = sala.gera_hordas(num_onda)   # retorna nomes dos inimigos por onda
+                 hordas = []  # cada horda será uma lista de Inimigos reais
 
-                for nomes in lista_nomes:
-                    horda = [gera_inimigo(nome) for nome in nomes]
-                    hordas.append(horda)
+                 for nomes in lista_nomes:
+                   horda = [gera_inimigo(nome) for nome in nomes]
+                   hordas.append(horda)
 
-                for i, horda in enumerate(hordas):
-                    resultado = combate(jogador, horda)
-                    if not resultado:
-                        jogador.hp = 0  
-                        break
-                    if jogador.hp > 0:
-                     input("Pressione Enter para seguir para a próxima sala! ")
+                 for i, horda in enumerate(hordas):
+                   resultado = combate(jogador, horda)
+                   if not resultado:
+                    jogador.hp = 0  
+                    break
+
+            
             elif chance:
-                print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
+                 print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
+                 input("Pressione Enter para prosseguir para a próxima sala!")
                     
-                print(sala.revela_loot(chance))
+                 print(sala.revela_loot(chance))
 
-                jg.menu_item(jogador, sala)
-                input("Pressione Enter para seguir para a próxima sala! ")
+                 jg.menu_item(jogador, sala)
+                 input("Pressione Enter para seguir para a próxima sala! ")
+            else:
+                print("Você vasculha a sala com atenção, inspecionando cantos, sombras e frestas. Após uma busca cuidadosa… chega à mais sólida das conclusões: não há absolutamente nada de útil por aqui. Talvez na próxima.")
+        elif opcao == "2":
+            fechar = False
+            print("\t\t==========VISUALIZANDO EQUIPAMENTO==========\n\n")
+            print("----------")
+            print(jogador.mostra_equipamento(jogador))
+            print("----------")
+            while fechar == False:
+                op = input("O que você deseja fazer?\n1.Usar item equipado.\t2.Voltar a explorar a sala.\n>>")
+                if op == "1":
+                    if jogador.item:
+                        print(f"=====\nUsando item {jogador.item.nome}!\n=====")
+                        print(jogador.usar_item())
+                        input("Pressione Enter para voltar à exploração!")
+                        break
+                    else:
+                        print("Você não tem nenhum item equipado!")
+                        input("Pressione Enter para continuar!")
+                        continue
+                elif op == "2":
+                    print("Você organiza seu equipamento e volta a sua atenção para a sala.")
+                    input("Pressione Enter para continuar!")
+                    break
+                else:
+                    print("Opção inválida!\n")
+                    input("Pressione Enter para tentar novamente! ")
+                    continue
+
+        elif opcao == "3":
+            print("=====\nVocê observa o ambiente por uma última vez e decide seguir para a próxima sala!")
+            input("Pressione Enter para continuar!")
+            prox_sala = True
         else:
-            print("Opção inválida. Tente novamente.")
-            continue
+            print("Opção inválida!")
+            input("Pressione Enter para tentar novamente! ")
+         
+        if jogador.hp <= 0:
+            print(f"\n{jogador.nome} caiu em batalha...")
+            break
+    if jogador.jogador_vivo:
+        prox_sala = True
     else:
-        print("-> Opção inválida!")
-        continue
-
-    if jogador.hp <= 0:
-        print(f"\n{jogador.nome} caiu em batalha...\n\t==========Game Over.==========")
+        print("\n\n\t\t==========GAME OVER==========\n\n")
         break
+

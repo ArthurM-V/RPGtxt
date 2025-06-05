@@ -315,9 +315,9 @@ tesouro_inimigos = {
 #dados de classes do usuário
 classes = {
 
-    "Guerreiro" : {"hp" : 55, "ep" : 12, "atk" : 2, "dfs" : 2, "inte" : 0},
-    "Mago" : {"hp" : 40, "ep" : 20, "atk" : 0, "dfs" : 1, "inte" : 3},
-    "Arqueiro" : {"hp" : 50, "ep" : 15, "atk" : 3, "dfs" : 0, "inte" : 1}
+    "Guerreiro" : {"hp" : 75, "ep" : 12, "atk" : 2, "dfs" : 2, "inte" : 0},
+    "Mago" : {"hp" : 60, "ep" : 20, "atk" : 0, "dfs" : 1, "inte" : 3},
+    "Arqueiro" : {"hp" : 70, "ep" : 15, "atk" : 3, "dfs" : 0, "inte" : 1}
 
 }
 
@@ -452,61 +452,6 @@ inimigos_base = {
     "descrição": "Peças de armadura que se movem sozinhas, unidas por uma força invisível e maligna."
     }
 }
-
-#Dados dos chefes
-chefes = {
-    "fogo": {
-        "nome": "Abattói",
-        "base": "Boitatá",
-        "hp": 100,
-        "ep": 40,
-        "atk": 8,
-        "dfs": 5,
-        "inte": 3,
-        "descricao": "Serpente flamejante que pune os invasores com brasas vivas. Sua mordida queima por dentro."
-    },
-    "água": {
-        "nome": "Ariupupi",
-        "base": "Ipupiara",
-        "hp": 90,
-        "ep": 50,
-        "atk": 7,
-        "dfs": 6,
-        "inte": 5,
-        "descricao": "Criatura abissal que emerge das profundezas. Seu toque traz o silêncio do fundo do mar."
-    },
-    "veneno": {
-        "nome": "Rocosecp",
-        "base": "Corpo Seco",
-        "hp": 85,
-        "ep": 60,
-        "atk": 6,
-        "dfs": 7,
-        "inte": 6,
-        "descricao": "Cadáver envenenado pela floresta. Espalha podridão com um único toque."
-    },
-    "gelo": {
-        "nome": "Choboide",
-        "base": "Boi de Conchas",
-        "hp": 95,
-        "ep": 45,
-        "atk": 6,
-        "dfs": 8,
-        "inte": 4,
-        "descricao": "Boi espectral coberto de gelo e conchas. Seu hálito paralisa e congela a alma."
-    },
-    "maldição": {
-        "nome": "Rasfetabe",
-        "base": "Besta-Fera",
-        "hp": 110,
-        "ep": 40,
-        "atk": 7,
-        "dfs": 6,
-        "inte": 7,
-        "descricao": "Criatura deformada por feitiços esquecidos. Seus gritos invocam o medo ancestral."
-    }
-}
-
 
 #Guarda os usuários
 users = {

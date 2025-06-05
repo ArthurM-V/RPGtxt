@@ -50,3 +50,39 @@ def turno_inimigo(inimigo, jogador):
     jogador.hp -= max(0, dano)
     if jogador.hp < 0 : jogador.hp = 0
     print(f"{jogador.nome} recebeu {max(0, dano)} de dano. HP atual: {jogador.hp}")
+
+def menu_loot(jogador, inimigo):
+    print(f"---------------\n\n{jogador.nome} | HP: {jogador.hp} EP: {jogador.ep}\n")
+    if jogador.item:
+        print(f"Item equipado atual: {jogador.item.nome}: {jogador.item.tipo} + {jogador.item.efeito}")
+    else:
+        print("Item equipado atual: Nenhum")
+    print(f"Item encontrado:{inimigo.item.nome} | Efeito: {inimigo.item.tipo} + {inimigo.item.efeito}\n---------------")
+    index = False
+    while index == False:
+        if jogador.item is not None:
+            escolha = input(f"\n===Você já tem um item equipado!===\n\nVocê pode escolher entre:\n1.Consumir o seu item equipado e trocar pelo encontrado. \t2.Ignorar o item encontrado.\n>>")
+
+            if escolha == "1":
+                print(f"Você usou {jogador.item.nome} e equipou {inimigo.item.nome}")
+                print(jogador.usar_item())
+                jogador.guarda_item(inimigo.item)
+                break
+            elif escolha == "2":
+                print(f"Você ignora {inimigo.item.nome}.")
+                break
+            else:
+                print("Escolha inválida")
+                continue        
+        else:
+            escolhe = input("1.Equipar item encontrado \t2.Ignorar item\n>>")
+            if escolhe == "1":
+                jogador.guarda_item(inimigo.item)
+                input(f"Você equipou {inimigo.item.nome}!")
+                break
+            elif escolhe == "2":
+                input(f"Você ignora {inimigo.item.nome}.")
+                break
+            else:
+                print("Opção inválida!")
+                continue
