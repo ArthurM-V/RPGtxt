@@ -455,5 +455,5 @@ inimigos_base = {
 
 #Guarda os usuários
 users = {
-    "rodolfo" : {"usuario" : "rodolfo", "email" : "email123@gmail.com", "senha" : "12345"}
+    "rodolfo" : {"usuario" : "rodolfo", "id" : 123, "email" : "email123@gmail.com", "senha" : "12345"}
 }

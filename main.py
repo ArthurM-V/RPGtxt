@@ -201,10 +201,10 @@ login = False
 while not cadastro:
     limpar_terminal()
     print("\t\t==========Bem-vindo ao cadastro de Masmorras e Visagens!==========\n\n")
-    user = input("Crie seu usuário!\n>>")
-    email = input("Informe seu e-mail!\n>>")
+    user = input("\nCrie seu usuário!\n>>")
+    email = input("\nInforme seu e-mail!\n>>")
     id = random.randint(1, 1000)
-    senha = input("Crie sua senha!\n>>")
+    senha = input("\nCrie sua senha!\n>>")
 
     if user in dndata.users.keys():
         input("Usuário já existe! Pressione Enter para tentar novamente!")
@@ -223,17 +223,26 @@ while login == False:
     print("\t\t==========Bem-vindo!==========\n\n")
     print("=>Faça seu login para jogar!")
 
-    login_user = input("Informe seu e-mail ou usuário\n>>")
-    login_senha = input("Senha\n>>")
+    login_user = input("\nInforme seu e-mail ou usuário\n>>")
+    login_senha = input("\nInforme sua senha\n>>")
 
     for dados in dndata.users.values():
-        if (login_user == dados["usuario"] or login_user == dados["email"]) and login_senha == dados["senha"]:
+        usuario_testado = us.User(
+            dados["usuario"],
+            dados["id"],
+            dados["email"],
+            dados["senha"]
+        )
+
+        if usuario_testado.checa_dados(login_user, login_senha):
             print("Login realizado com sucesso!")
+            usuario = usuario_testado
             login = True
             break
     else:
-            print("Usuário ou senha incorretos.")
-            input("Pressione Enter para tentar novamente!")
+        print("Usuário ou senha incorretos.")
+        input("Pressione Enter para tentar novamente!")
+
 
 #Looping de criação de personagens
 personagem_criado = False
