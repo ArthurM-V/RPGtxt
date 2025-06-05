@@ -388,7 +388,7 @@ habilidades = {
             "nome": "Míssil arcano",
             "descricao": "Lança um projeto feito de energia pura.",
             "tipo": "inte",
-            "efeito": 2,
+            "efeito": 3,
             "custo": 3
         }
     ],
@@ -398,7 +398,7 @@ habilidades = {
             "nome": "Flecha Perfurante",
             "descricao": "Dispara uma flecha precisa que ignora parte da defesa inimiga.",
             "tipo": "atk",
-            "efeito": 2,
+            "efeito": 4,
             "custo": 2
         },
         {
@@ -414,7 +414,7 @@ habilidades = {
 #inimigos
 inimigos_base = {
     "esqueleto": {
-        "hp": 50,
+        "hp": 10,
         "ep" : 0,
         "atk": 2,
         "dfs": 1,
@@ -424,7 +424,7 @@ inimigos_base = {
         
     },
     "duende": {
-        "hp": 35,
+        "hp": 12,
         "ep" : 0,
         "atk": 3,
         "dfs": 0,
@@ -434,7 +434,7 @@ inimigos_base = {
         
     },
     "espectro": {
-        "hp": 40,
+        "hp": 9,
         "ep" : 14,
         "atk": 4,
         "dfs": 1,
@@ -444,7 +444,7 @@ inimigos_base = {
         
     },
     "armadura viva": {
-    "hp": 60,
+    "hp": 15,
     "ep" : 14,
     "atk": 5,
     "dfs": 4,
@@ -452,6 +452,61 @@ inimigos_base = {
     "descrição": "Peças de armadura que se movem sozinhas, unidas por uma força invisível e maligna."
     }
 }
+
+#Dados dos chefes
+chefes = {
+    "fogo": {
+        "nome": "Abattói",
+        "base": "Boitatá",
+        "hp": 100,
+        "ep": 40,
+        "atk": 8,
+        "dfs": 5,
+        "inte": 3,
+        "descricao": "Serpente flamejante que pune os invasores com brasas vivas. Sua mordida queima por dentro."
+    },
+    "água": {
+        "nome": "Ariupupi",
+        "base": "Ipupiara",
+        "hp": 90,
+        "ep": 50,
+        "atk": 7,
+        "dfs": 6,
+        "inte": 5,
+        "descricao": "Criatura abissal que emerge das profundezas. Seu toque traz o silêncio do fundo do mar."
+    },
+    "veneno": {
+        "nome": "Rocosecp",
+        "base": "Corpo Seco",
+        "hp": 85,
+        "ep": 60,
+        "atk": 6,
+        "dfs": 7,
+        "inte": 6,
+        "descricao": "Cadáver envenenado pela floresta. Espalha podridão com um único toque."
+    },
+    "gelo": {
+        "nome": "Choboide",
+        "base": "Boi de Conchas",
+        "hp": 95,
+        "ep": 45,
+        "atk": 6,
+        "dfs": 8,
+        "inte": 4,
+        "descricao": "Boi espectral coberto de gelo e conchas. Seu hálito paralisa e congela a alma."
+    },
+    "maldição": {
+        "nome": "Rasfetabe",
+        "base": "Besta-Fera",
+        "hp": 110,
+        "ep": 40,
+        "atk": 7,
+        "dfs": 6,
+        "inte": 7,
+        "descricao": "Criatura deformada por feitiços esquecidos. Seus gritos invocam o medo ancestral."
+    }
+}
+
 
 #Guarda os usuários
 users = {

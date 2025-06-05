@@ -14,7 +14,7 @@ class Personagem:
         return f"Atributos - ATK: {self.atk}, DFS: {self.dfs}, INTE: {self.inte}"
     
     def calcula_dano(self):
-        dado = random.randint(1, 6)
+        dado = random.randint(1, 4)
         return self.atk + dado
     
     def ataca(self, alvo):

@@ -3,32 +3,31 @@ import dungeon_dict as dndata
 import random
 
 class Inimigo(Personagem):
-    def __init__(self, nome, hp, ep, atk, dfs, inte, arma, loot, descricao):
-        super().__init__(nome, hp, ep, atk, dfs, inte, arma)
+    def __init__(self, nome, classe, hp, ep, atk, dfs, inte, item, loot, descricao):
+        super().__init__(nome, classe, hp, ep, atk, dfs, inte)
+        self.item = item
         self.loot = loot
         self.descricao = descricao
 
-    @property
     def inimigo_vivo(self):
         return self.hp > 0
-    
-    def aparece(self):
-        return f"{self.descricao}"
-    
+
     def morre(self):
-        return f"Ao dar seu último ataque, o corpo danificado do {self.nome} se desfalece e desaparece em uma nuvem de névoa negra."
+        return f"Ao dar seu último ataque, você vê o corpo danificado do {self.nome} se desfalecendo e desaparecendo em uma nuvem de névoa negra."
 
     def larga_loot(self):
         chance = random.randint(1, 20)
         if chance % 4 == 0:
-            print(f"Enquanto a nuvem de névoa se dissipa, você vê o formato de algo em meio à todo o miasma, você observa até conseguir discernir o objeto no chão. Em meio à sala escura você enxerga um {self.loot}")
-        return True
+            print(f"Enquanto o corpo do monstro se dissipa, você vê o formato de algo em meio à toda a névoa negra, você observa até conseguir discernir o objeto no chão. Em meio à sala escura você enxerga um {self.loot}")
+            return True
+        else:
+            return False
 
     def gera_dialogo(self):
         return f"{self.nome} ruge ameaçadoramente."
     
 def turno_inimigo(inimigo, jogador):
-    fala = random.randint(1, 10)
+    fala = random.randint(0, 10)
     if fala % 2 == 0:
         print(inimigo.gera_dialogo())
     print(f"\n{inimigo.nome} ataca!")

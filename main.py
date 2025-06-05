@@ -46,7 +46,7 @@ def gera_masmorra():
     dndata.entradas[chave_entrada].remove(entrada) 
 
     #escolhe o número de salas
-    num_salas = random.randint(6, 8)
+    num_salas = random.randint(6, 10)
 
     #retorna um objeto Masmorra
     return ms.Masmorra(nome, tipo, origem, ambiente, perigo, entrada, num_salas, chave_perigo)
@@ -95,6 +95,7 @@ def gera_sala(x, tipo=None):
 def gera_inimigo(nome):
     nome = nome
     
+    classe = "inimigo"
     hp = dndata.inimigos_base[nome]["hp"]
     ep = dndata.inimigos_base[nome]["ep"]
     atk = dndata.inimigos_base[nome]["atk"]
@@ -102,20 +103,22 @@ def gera_inimigo(nome):
     inte = dndata.inimigos_base[nome]["inte"]
     
 
-    loot = random.choice(list(dndata.tesouro_inimigos.keys()))
-
+    item_escolhido = random.choice(list(dndata.tesouro_inimigos.items()))
+    item_nome, item_info = item_escolhido
+    item = it.Item(item_nome, item_info["efeito"], item_info["usos"], item_info["tipo"])
+    
     descricao_base = dndata.inimigos_base[nome]["descrição"]
     
     desc = f"{descricao_base}"
 
-    return inm.Inimigo(nome, hp, ep, atk, dfs, inte, item, loot, desc)
+    return inm.Inimigo(nome, classe, hp, ep, atk, dfs, inte, item, item, desc)
 
 #Lida com o combate por turnos
 def combate(jogador, horda):
     while jogador.hp > 0 and any(inimigo.hp > 0 for inimigo in horda):
-
+        
         print("\n==========COMBATE==========\n\n")
-
+        
         # TURNO DO JOGADOR
         vivos = [inimigo for inimigo in horda if inimigo.hp > 0]
 
@@ -135,6 +138,10 @@ def combate(jogador, horda):
         # Turno do jogador
         jg.turno_jogador(jogador, alvo)
         input("Pressione Enter para continuar!")
+        if alvo.hp <= 0:
+            print("\n=====\n")
+            print(alvo.morre())
+            print(f"Inimigo {alvo.nome} foi derrotado.\n=====")
         # Verifica se todos os inimigos foram derrotados
         if all(inimigo.hp <= 0 for inimigo in horda):
             print("\n\t=====Todos os inimigos foram derrotados!=====\n")
@@ -173,7 +180,7 @@ def escolher_alvo(inimigos):
 def descreve_classe():
     for i, (classe, desc) in enumerate(dndata.descricoes_classes.items(), start=1):
         print("----------\n")
-        print(f"{i}. {classe}: {desc}\n=>{dndata.classes[classe]}\n")
+        print(f"{i}. {classe}: {desc}\n=>Atributos: ATK: {dndata.classes[classe]["atk"]}, DFS: {dndata.classes[classe]["dfs"]}, INTE: {dndata.classes[classe]["inte"]}\n")
 
 #Cria o menu principal
 def menu_principal(x):
@@ -243,7 +250,7 @@ while not personagem_criado:
         "3": "Arqueiro"
         }
 
-        escolha = input("Digite o número da classe desejada:\n>> ")
+        escolha = input("----------\nDigite o número da classe desejada:\n>> ")
 
         if escolha in opcoes:
             nome_classe = opcoes[escolha]
@@ -272,7 +279,7 @@ while not personagem_criado:
             item_nome, item_info = item_escolhido
             item = it.Item(item_nome, item_info["efeito"], item_info["usos"], item_info["tipo"])
 
-            nome_personagem = input(f"\nDigite o nome do seu personagem {nome_classe}:\n>> ")
+            nome_personagem = input(f"=====\nDigite o nome do seu personagem {nome_classe}:\n>> ")
 
             # Criação do objeto Jogador
             jogador = jg.Jogador(
@@ -317,8 +324,9 @@ while not personagem_criado:
 masmorra = gera_masmorra()
 lista_salas = gera_tipos_salas(masmorra.num_salas)
 salas = [gera_sala(masmorra, tipo) for tipo in lista_salas]
+segue = False
 index = 0
-print("\n\n=====")
+print("\n\n=====\n")
 print(masmorra.narra_masmorra())
 
 sala_final = None
@@ -330,18 +338,21 @@ for sala in salas:
 
 for i, sala in enumerate(salas):
     index += 1
+    prox_sala = False
+    
     print("\n----------")
-    print(f"\nMasmorra {masmorra.nome}\nSala: {i+1}\nExplorador: {jogador.nome}\n\n")
+    print(f"\nMasmorra {masmorra.nome}\nSala: {i+1}\nExplorador: {jogador.nome}\n")
     print("----------")
 
     print(sala.narra_sala(sala.tipo))
     print("Você adentra a sala misteriosa. O que deseja fazer?\n1.Investigar a sala.\n2.Gerenciar o equipamento.\n3.Seguir em frente.\n")
     opcao = input(">>")
 
+    inimigos = sala.tem_inimigos()
     chance = sala.tem_loot()
 
     if opcao == "1" or opcao == "3":
-        if sala.tem_inimigos():
+        if inimigos:
                 print("----------\n")
                 print(f"Ao adentrar mais a sala você percebe uma movimentação estranha, como se o ambiente estivesse escurecendo, a luz das tochas se tornam mais fraca e o ar mais denso, sombras dançam pela sala. De repente, vultos aparecessem e você se vê cercado por figuras monstruosas. Enquanto algumas delas te observam e se aproximam, você se prepara para o combate.")
                 num_onda = sala.calcula_encontros()        # retorna quantas ondas
@@ -349,31 +360,65 @@ for i, sala in enumerate(salas):
                 hordas = []  # cada horda será uma lista de Inimigos reais
 
                 for nomes in lista_nomes:
-                    horda = [gera_inimigo(nome, masmorra) for nome in nomes]
+                    horda = [gera_inimigo(nome) for nome in nomes]
                     hordas.append(horda)
 
                 for i, horda in enumerate(hordas):
-                    print(f"\n\n{i + 1}º Turno:")
                     resultado = combate(jogador, horda)
                     if not resultado:
                         jogador.hp = 0  
                         break
-        elif chance:
-
-            if True:
-
-                    print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
                     
-                    print(sala.revela_loot(chance))
+        elif chance:
+                print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
+                    
+                print(sala.revela_loot(chance))
 
-                    jg.menu_item(jogador, sala)
+                jg.menu_item(jogador, sala)
+                input("Pressione Enter para seguir para a próxima sala! ")
 
     elif opcao == "2":
         print("\t\t==========VISUALIZANDO EQUIPAMENTO==========\n\n")
         print("----------")
         print(jogador.mostra_equipamento(jogador))
         print("----------")
+        op = input("O que você deseja fazer?\n1.Usar item equipado.\t2.Voltar a explorar a sala.\n>>")
+        if op == "1":
+            if jogador.item:
+                print(f"=====\nUsando item {jogador.item.nome}!\n=====")
+                print(jogador.usar_item())
+            else:
+                print("Você não tem nenhum item equipado!")
+                input("Pressione Enter para continuar!")
+        elif op == "2":
+            if inimigos:
+                print("----------\n")
+                print(f"Enquanto você organiza seus equipamentos, você percebe uma movimentação estranha, como se o ambiente estivesse escurecendo, a luz das tochas se tornam mais fraca e o ar mais denso, sombras dançam pela sala. De repente, vultos aparecessem e você se vê cercado por figuras monstruosas. Enquanto algumas delas te observam e se aproximam, você se prepara para o combate.")
+                num_onda = sala.calcula_encontros()        # retorna quantas ondas
+                lista_nomes = sala.gera_hordas(num_onda)   # retorna nomes dos inimigos por onda
+                hordas = []  # cada horda será uma lista de Inimigos reais
 
+                for nomes in lista_nomes:
+                    horda = [gera_inimigo(nome) for nome in nomes]
+                    hordas.append(horda)
+
+                for i, horda in enumerate(hordas):
+                    resultado = combate(jogador, horda)
+                    if not resultado:
+                        jogador.hp = 0  
+                        break
+                    if jogador.hp > 0:
+                     input("Pressione Enter para seguir para a próxima sala! ")
+            elif chance:
+                print("\n Você começa a vasculhar a sala em silêncio, atento a qualquer sinal fora do comum. Com passos calculados, toca cada fresta entre as pedras, sentindo desníveis sutis e escutando ecos estranhos ao pressionar certos pontos. Em meio às sombras tremeluzentes, seus olhos captam algo — uma discreta saliência, uma ranhura suspeita no chão, talvez, atrás daquela parede instável ou sob aquela laje solta, esteja exatamente o que você procura...")
+                    
+                print(sala.revela_loot(chance))
+
+                jg.menu_item(jogador, sala)
+                input("Pressione Enter para seguir para a próxima sala! ")
+        else:
+            print("Opção inválida. Tente novamente.")
+            continue
     else:
         print("-> Opção inválida!")
         continue

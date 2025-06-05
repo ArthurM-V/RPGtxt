@@ -6,6 +6,7 @@ from habilidade import Habilidade
 class Jogador(Personagem):
     def __init__(self, nome, classe, hp, ep, atk, dfs, inte, item, arma, habilidades):
         super().__init__(nome, classe, hp, ep, atk, dfs, inte)
+        self.classe = classe
         self.arma = arma
         self.item = item
         self.habilidades = habilidades
@@ -18,7 +19,18 @@ class Jogador(Personagem):
         pass
 
     def mostra_equipamento(self, jogador):
-        return f"Classe: {self.classe}\t{jogador.mostra_atributos()}\nHP: {self.hp}\tEP: {self.ep}\nItem: {self.item.item_info()}\nArma: {self.arma.dados()}"
+         
+        if self.item:
+            item_info = self.item.item_info()
+        else:
+            item_info = "Nenhum item equipado"
+
+        if self.arma:
+            arma_info = self.arma.dados()
+        else:
+            arma_info = "Nenhuma arma equipada"
+
+        return f"Classe: {self.classe}\t{jogador.mostra_atributos()}\nHP: {self.hp}\tEP: {self.ep}\nItem: {item_info}\nArma: {arma_info}"
 
     def equipa_arma(self):
         arma = dndata.armas_iniciais[self.classe]
@@ -98,7 +110,11 @@ class Jogador(Personagem):
 
 def menu_item(jogador, sala):
 
-    print(f"---------------\n\n{jogador.nome} | HP: {jogador.hp} EP: {jogador.ep}\nItem equipado atual: {jogador.item.nome}: {jogador.item.tipo} + {jogador.item.efeito}")
+    print(f"---------------\n\n{jogador.nome} | HP: {jogador.hp} EP: {jogador.ep}\n")
+    if jogador.item:
+        print(f"Item equipado atual: {jogador.item.nome}: {jogador.item.tipo} + {jogador.item.efeito}")
+    else:
+        print("Item equipado atual: Nenhum")
     print(f"{sala.tesouro.nome} | Efeito: {sala.tesouro.tipo} + {sala.tesouro.efeito}\n---------------")
     index = False
     while index == False:
@@ -122,10 +138,10 @@ def menu_item(jogador, sala):
             escolhe = input("1.Equipar item encontrado \t2.Ignorar item\n>>")
             if escolhe == "1":
                 jogador.guarda_item(sala.tesouro)
-                print(f"Você equipou {sala.tesouro.nome}")
+                input(f"Você equipou {sala.tesouro.nome}")
                 break
             elif escolhe == "2":
-                print(f"Você ignora {sala.tesouro.nome} e continua sua exploração.")
+                input(f"Você ignora {sala.tesouro.nome} e continua sua exploração.")
                 break
             else:
                 print("Opção inválida!")

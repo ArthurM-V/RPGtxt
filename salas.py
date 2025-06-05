@@ -19,7 +19,7 @@ class Sala:
     
     def calcula_encontros(self):
         
-        num_horda = random.randint(1, 3)
+        num_horda = random.randint(1, 2)
         
         return num_horda
     
@@ -36,7 +36,7 @@ class Sala:
 
     def tem_loot(self):
         
-        chance = random.randint(1, 6)
+        chance = random.randint(1, 4)
 
         if chance % 2 == 0:
             return True
